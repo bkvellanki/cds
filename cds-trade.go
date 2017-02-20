@@ -242,7 +242,8 @@ func (t *SimpleChaincode) create_cds(stub shim.ChaincodeStubInterface, args []st
 
 	fmt.Println("Random String is " + string(b))
 
-	cdstransactionid :=  referenceid + "-" + string(b)
+	//cdstransactionid :=  referenceid + "-" + string(b)
+	cdstransactionid :=  referenceid
 	fmt.Println("CDS Transaction Id is" + cdstransactionid)
 	myLogger.Info("Refernce Transaction Id is: " + cdstransactionid)
 	err := stub.PutState(cdstransactionid, []byte(cdsInputData))
