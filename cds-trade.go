@@ -154,23 +154,25 @@ func (t *SimpleChaincode) validate_RefIdAndCur(stub shim.ChaincodeStubInterface,
 	refBytes, err := stub.GetState(refid)
 	if err != nil {
 		fmt.Println("Error retrieving RefEntity " + refid)
-		result,err := json.Marshal(ValidationResult{RefEntId: refid, RefEntCur: refcur, RefResult: "ERROR - No RefEntid"})
+		//result,err := json.Marshal(ValidationResult{RefEntId: refid, RefEntCur: refcur, RefResult: "ERROR - No RefEntid"})
 		if err != nil {
 			return nil, errors.New("Error Marshalling the Query Data1")
 		}
 		//result := string(vr)
-		return result, nil
+		return nil, errors.New("Error retrieving RefEntity " + refid)
 	}
 	err = json.Unmarshal(refBytes, &refEntityObj)
 	fmt.Println("Passed Unmarshalling")
 	if err != nil {
 		fmt.Println("Error unmarshalling refbytes " + refid)
-		result,err := json.Marshal(ValidationResult{RefEntId: refid, RefEntCur: refcur, RefResult: "ERROR - Failed Unmarshlling Result"})
+		//result,err := json.Marshal(ValidationResult{RefEntId: refid, RefEntCur: refcur, RefResult: "ERROR - Failed Unmarshlling Result"})
 		if err != nil {
 			return nil, errors.New("Error Marshalling the Query Data2")
 		}
+
+		return nil, errors.New("Error unmarshalling refbytes " + refid)
 		//result := string(vr)
-		return result, nil
+		//return result, nil
 	}
 
 	currencyVal := refEntityObj.RefEntityCur
@@ -181,16 +183,18 @@ func (t *SimpleChaincode) validate_RefIdAndCur(stub shim.ChaincodeStubInterface,
 		if err != nil {
 			return nil, errors.New("Error Marshalling the Query Data3")
 		}
-		//result := string(vr)
+
 		return result, nil
 	} else {
 		fmt.Println("Inside Currency Validation - Failed")
-		result,err := json.Marshal(ValidationResult{RefEntId: refid, RefEntCur: refcur, RefResult: "ERROR - Currency Code Not Matching"})
+		//result,err := json.Marshal(ValidationResult{RefEntId: refid, RefEntCur: refcur, RefResult: "ERROR - Currency Code Not Matching"})
 		if err != nil {
 			return nil, errors.New("Error Marshalling the Query Data4")
 		}
+
+		return nil, errors.New("Currency Validation - Failed For RefID" +refid +"-- "+ refcur)
 		//result := string(vr)
-		return result, nil
+		//return result, nil
 	}
 
 }
@@ -243,7 +247,9 @@ func (t *SimpleChaincode) create_cds(stub shim.ChaincodeStubInterface, args []st
 	fmt.Println("Random String is " + string(b))
 
 	//cdstransactionid :=  referenceid + "-" + string(b)
+
 	cdstransactionid :=  referenceid
+
 	fmt.Println("CDS Transaction Id is" + cdstransactionid)
 	myLogger.Info("Refernce Transaction Id is: " + cdstransactionid)
 	err := stub.PutState(cdstransactionid, []byte(cdsInputData))
@@ -276,6 +282,7 @@ func (t *SimpleChaincode) load_entities(stub shim.ChaincodeStubInterface, args [
 		os.Exit(1)
 	}*/
 
+
 	entitiesload := []byte(`[
 				  {
 				    "RefEntityId": "002BB2",
@@ -290,7 +297,7 @@ func (t *SimpleChaincode) load_entities(stub shim.ChaincodeStubInterface, args [
 				  {
 				    "RefEntityId": "4AB951",
 				    "RefEntityName": "Republic of Italy",
-				    "RefEntityCur": "EUR"
+				    "RefEntityCur": "GBP"
 				  },
 				  {
 				    "RefEntityId": "008FAQ",
